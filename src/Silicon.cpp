@@ -279,7 +279,7 @@ namespace galsim {
         int y = k % ny;
 
         // compute outer bounds first
-        pixelOuterBoundsData[k] = Bounds<double>();
+        pixelOuterBoundsData[k] = Bounds<float>();
 
         // iterate over pixel boundary
         int n, idx;
