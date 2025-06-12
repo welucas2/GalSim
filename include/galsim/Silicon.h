@@ -92,6 +92,7 @@ namespace galsim
         template <typename T>
         void update(ImageView<T> target);
 
+        double pixelShift(int i, int j, int nx, int ny) const;
         double pixelArea(int i, int j, int nx, int ny) const;
 
         template <typename T>
