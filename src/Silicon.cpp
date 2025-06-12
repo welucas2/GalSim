@@ -919,6 +919,32 @@ namespace galsim {
         return false;
     }
 
+    // Calculates the difference between a pixel's nominal centre and its
+    // effective centre due to the BF effect.
+    double Silicon::pixelShift(int i, int j, int nx, int ny) const
+    {
+        // determine the nominal pixel centre
+        Position<double> pc_n(i + 0.5, j + 0.5);
+
+        // calculate the centroid of the pixel boundaries
+        Position<double> pc_bf(0.0, 0.0);
+        bool horizontal;
+        for (int n = 0; n < _nv; n++) {
+            int pi = getBoundaryIndex(i, j, n, &horizontal, nx, ny);
+            Position<double> p = horizontal ? _horizontalBoundaryPoints[pi] :
+                _verticalBoundaryPoints[pi];
+            if ((n > cornerIndexBottomRight()) && (n < cornerIndexTopRight())) p.x += 1.0;
+            if ((n >= cornerIndexTopRight()) && (n <= cornerIndexTopLeft())) p.y += 1.0;
+
+            pc_bf += p;
+        }
+        pc_bf /= _nv;
+
+        Position<double> delta_pos = pc_bf - pc_n;
+
+        return std::sqrt(delta_pos.x * delta_pos.x + delta_pos.y * delta_pos.y);
+    }
+
     // Calculates the area of a pixel based on the linear boundaries.
     double Silicon::pixelArea(int i, int j, int nx, int ny) const
     {
@@ -991,7 +1017,7 @@ namespace galsim {
 
             for (int j=j1; j<=j2; ++j, ptr+=skip) {
                 for (int i=i1; i<=i2; ++i, ptr+=step) {
-                    double newArea = pixelArea(i - i1, j - j1, nx, ny);
+                    double newArea = pixelShift(i - i1, j - j1, nx, ny);
                     *ptr = newArea;
                 }
             }
