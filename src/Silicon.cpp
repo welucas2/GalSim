@@ -924,7 +924,7 @@ namespace galsim {
     double Silicon::pixelShift(int i, int j, int nx, int ny) const
     {
         // determine the nominal pixel centre
-        Position<double> pc_n(i + 0.5, j + 0.5);
+        Position<double> pc_n(0.5, 0.5);
 
         // calculate the centroid of the pixel boundaries
         Position<double> pc_bf(0.0, 0.0);
